@@ -2,7 +2,7 @@ resource "google_sql_database_instance" "postgres" {
   provider = google
   name             = "postgres-instance-${random_id.db_name_suffix.hex}"
   database_version = "POSTGRES_14"
-
+  deletion_protection = false
   depends_on = [google_service_networking_connection.private_vpc_connection]
 
   settings {
