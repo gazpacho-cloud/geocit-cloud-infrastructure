@@ -24,6 +24,7 @@ resource "google_sql_database_instance" "postgres" {
     #     }
       #}
 }
+#testuser
 resource "google_sql_user" "db_user" {
   name     = "postgres"
   instance = google_sql_database_instance.postgres.name
