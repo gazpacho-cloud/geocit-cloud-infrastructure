@@ -50,3 +50,10 @@
   roles:
     - maven
     - tomcat
+
+- name: deploy monitoring stack
+  hosts: monitoring_instances
+  become: yes
+  roles:
+    - grafana
+    - prometheus
