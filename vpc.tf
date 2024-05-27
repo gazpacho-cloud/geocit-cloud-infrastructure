@@ -14,6 +14,13 @@ resource "google_compute_subnetwork" "my_custom_subnet" {
 
 }
 
+resource "google_compute_subnetwork" "my_custom_subnet_for_grafane1" {
+  name          = "my-custom-subnet-for-grafane1"
+  ip_cidr_range = "10.10.10.0/24"
+  network       = google_compute_network.static.name
+  
+
+}
 
 #Peering to db/---------------
 resource "google_compute_global_address" "private_ip_alloc" {

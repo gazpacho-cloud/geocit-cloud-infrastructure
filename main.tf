@@ -5,7 +5,7 @@ resource "google_compute_instance" "Instance_for_grafane" {
   machine_type = "e2-small"
   #треба описати A list of network tags to attach to the instance.
   #tags = ["ssh-enabled", "bar"]
-
+  tags =["allow-all"]
   boot_disk {
     initialize_params {
       image = "ubuntu-os-cloud/ubuntu-2204-lts"
@@ -14,7 +14,7 @@ resource "google_compute_instance" "Instance_for_grafane" {
 
   network_interface {
     network = "my-network"
-    subnetwork = google_compute_subnetwork.my_custom_subnet.id
+    subnetwork = google_compute_subnetwork.my_custom_subnet_for_grafane1.id
     access_config {
       // Ephemeral public IP
       
@@ -23,33 +23,7 @@ resource "google_compute_instance" "Instance_for_grafane" {
 
   }
 }
-resource "google_compute_instance" "Instance_for_db" {
-  provider = google
-  count        = 1
-  name         = "instance-for-db"
-  machine_type = "e2-small"
-  #треба описати A list of network tags to attach to the instance.
-  #tags = ["ssh-enabled", "bar"]
-   tags = ["http-server","https-server"]
-  boot_disk {
-    initialize_params {
-      image = "ubuntu-os-cloud/ubuntu-2204-lts"
-    }
- 
-  }
 
-  network_interface {
-    network = "my-network"
-    subnetwork = google_compute_subnetwork.my_custom_subnet.id
-    access_config {
-      // Ephemeral public IP
-      
-    }
-
-  }
-  
-
-}
 resource "random_id" "db_name_suffix" {
   byte_length = 4
 }

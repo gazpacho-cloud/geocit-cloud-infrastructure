@@ -3,7 +3,7 @@ resource "google_compute_firewall" "fw1" {
 
   name = "website-fw-1"
   network = google_compute_network.static.id
-  source_ranges = ["10.10.0.0/24"]
+  source_ranges = ["0.0.0.0/0"]
   allow {
     protocol = "tcp"
   }
@@ -19,7 +19,7 @@ resource "google_compute_firewall" "fw2" {
   depends_on = [google_compute_firewall.fw1]
   name = "website-fw-2"
   network = google_compute_network.static.id
-  source_ranges = ["0.0.0.0/0"]
+  source_ranges = ["10.10.0.0/24"]
   allow {
     protocol = "tcp"
     ports = ["22"]
@@ -50,7 +50,7 @@ resource "google_compute_firewall" "rules" {
     protocol = "tcp"
     ports    = ["22"]
   }
-  source_ranges = ["0.0.0.0/0"]
+  source_ranges = ["91.224.69.0/24","46.200.235.0/24", "35.235.240.0/20"]
 }
 resource "google_compute_firewall" "allow_connect_to_db" {
   name    = "allow-connect-to-db"
@@ -69,17 +69,16 @@ resource "google_compute_firewall" "db1" {
 
   allow {
     protocol = "tcp"
-    ports    = ["8080"]
+    ports    = ["80"]
   }
 
   source_ranges = ["0.0.0.0/0"]
 }
+resource "google_compute_firewall" "target_grafane" {
 
-resource "google_compute_firewall" "fw7" {
-
-  name = "website-fw-7"
+  name = "website-grafane"
   network = google_compute_network.static.id
-  source_ranges = ["10.10.0.0/24"]
+  source_ranges = ["0.0.0.0/0"]
   allow {
     protocol = "tcp"
   }
@@ -89,16 +88,5 @@ resource "google_compute_firewall" "fw7" {
   allow {
     protocol = "icmp"
   }
-
-}
-# allow access from health check ranges
-resource "google_compute_firewall" "default" {
-  name          = "app-fw-allow-hc"
-  direction     = "INGRESS"
-  network       = google_compute_network.static.id
-  source_ranges = ["0.0.0.0/0"]
-  allow {
-    protocol = "tcp"
-  }
-  target_tags = ["allow-health-check"]
+  target_tags = ["allow-all"]
 }
