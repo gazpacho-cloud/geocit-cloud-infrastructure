@@ -1,0 +1,32 @@
+- name: Update apt cache
+  apt:
+    update_cache: yes
+
+- name: Install Tomcat9
+  apt:
+    name: tomcat9
+    state: present
+  ignore_errors: yes
+
+- name: Install OpenJDK (dependency for Tomcat)
+  apt:
+    name: openjdk-11-jdk
+    state: present
+
+- name: Reload systemd daemon
+  systemd:
+    daemon_reload: yes
+
+- name: Copy war file to tomcat webapps directory
+  copy:
+    src: /geocit/target/citizen.war
+    dest: /var/lib/tomcat9/webapps/citizen.war
+    owner: tomcat
+    group: tomcat
+    mode: 0644
+
+- name: Start and enable Tomcat9
+  systemd:
+    name: tomcat9
+    state: started
+    enabled: yes

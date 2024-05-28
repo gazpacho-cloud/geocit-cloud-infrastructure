@@ -1,4 +1,3 @@
-
 ## Prerequisites
 
 - Google Cloud SDK installed and configured
@@ -98,4 +97,3 @@
    ```console
    terraform apply
    ```
-
