@@ -28,7 +28,7 @@
       replace:
         path: /geocit/src/main/resources/application.properties
         regexp: 'localhost:8080'
-        replace: "{{ hostvars['app'].ansible_host }}:8080"
+        replace: "{{ hostvars['app'].ansible_host }}:80"
 
     - name: Change configuration in application.properties
       lineinfile:
@@ -44,9 +44,16 @@
     - name: Change configuration in js
       replace:
         path: /geocit/src/main/webapp/static/js/app.6313e3379203ca68a255.js
-        regexp: 'localhost'
-        replace: "{{ hostvars['app'].ansible_host }}"
+        regexp: 'localhost:8080'
+        replace: "{{ hostvars['app'].ansible_host }}:80"
 
   roles:
     - maven
     - tomcat
+
+- name: deploy monitoring stack
+  hosts: monitoring_instances
+  become: yes
+  roles:
+    - grafana
+    - prometheus
