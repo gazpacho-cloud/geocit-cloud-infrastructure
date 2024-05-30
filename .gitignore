@@ -1,7 +1,9 @@
 terraform/ferrous-terrain-422816-i0-93fb4bb15c74.json
-terraform/.terraform.lock.hcl
-terraform/terraform.tfstate.backup
-terraform/terraform.exe
-terraform/.terraform
-terraform/terraform.tfstate
+.terraform.lock.hcl
+terraform.tfstate.backup
+terraform.exe
+.terraform
+geocit-cloud-infrastructure
+.DS_Store
+terraform.tfstate
 
