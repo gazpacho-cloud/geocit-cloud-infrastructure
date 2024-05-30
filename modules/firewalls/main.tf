@@ -2,7 +2,7 @@
 resource "google_compute_firewall" "fw1" {
 
   name = "website-fw-1"
-  network = google_compute_network.static.id
+  network = var.network
   source_ranges = ["0.0.0.0/0"]
   allow {
     protocol = "tcp"
@@ -18,7 +18,7 @@ resource "google_compute_firewall" "fw1" {
 resource "google_compute_firewall" "fw2" {
   depends_on = [google_compute_firewall.fw1]
   name = "website-fw-2"
-  network = google_compute_network.static.id
+  network = var.network
   source_ranges = ["10.10.0.0/24"]
   allow {
     protocol = "tcp"
@@ -32,7 +32,7 @@ resource "google_compute_firewall" "fw3" {
   depends_on = [google_compute_firewall.fw2]
 
   name = "website-fw-3"
-  network = google_compute_network.static.id
+  network = var.network
   source_ranges = ["130.211.0.0/22", "35.191.0.0/16"]
   allow {
     protocol = "tcp"
@@ -77,7 +77,7 @@ resource "google_compute_firewall" "db1" {
 resource "google_compute_firewall" "target_grafane" {
 
   name = "website-grafane"
-  network = google_compute_network.static.id
+  network = var.network
   source_ranges = ["0.0.0.0/0"]
   allow {
     protocol = "tcp"
