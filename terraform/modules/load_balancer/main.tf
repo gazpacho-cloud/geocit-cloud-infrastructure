@@ -39,6 +39,14 @@ resource "google_compute_backend_service" "default" {
     capacity_scaler = 1.0
   }
 }
+# health check
+resource "google_compute_health_check" "default" {
+  name     = "app-hc"
+
+  http_health_check {
+    port_specification = "USE_SERVING_PORT"
+  }
+}
 
 # MIG
 resource "google_compute_instance_group_manager" "default" {
@@ -49,7 +57,7 @@ resource "google_compute_instance_group_manager" "default" {
     port = 8080
   }
   version {
-    instance_template = module.Autoscaling_instances.default.id
+    instance_template = google_compute_instance_template.default.id
     name              = "primary"
   }
   base_instance_name = "vm"

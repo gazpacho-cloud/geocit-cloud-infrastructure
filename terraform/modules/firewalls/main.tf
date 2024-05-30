@@ -1,4 +1,3 @@
-
 resource "google_compute_firewall" "fw1" {
 
   name = "website-fw-1"
