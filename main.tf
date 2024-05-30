@@ -12,7 +12,7 @@ module "Compute_instance" {
 }
 module "dns" {
   source = "./modules/dns"
-  global_address = google_compute_global_address.default.id
+  global_address = google_compute_global_address.default.address
 
 }
 module "firewalls" {
