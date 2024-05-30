@@ -15,10 +15,7 @@ resource "google_compute_instance" "Instance_for_grafane" {
     network = var.network
     subnetwork = var.subnetwork
     access_config {
-      // Ephemeral public IP
-      
+      // Ephemeral public IP      
     }
-
-
   }
 }
