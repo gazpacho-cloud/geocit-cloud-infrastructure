@@ -39,13 +39,29 @@ resource "google_compute_backend_service" "default" {
     capacity_scaler = 1.0
   }
 }
-# health check
-resource "google_compute_health_check" "default" {
-  name     = "app-hc"
 
-  http_health_check {
-    port_specification = "USE_SERVING_PORT"
+resource "google_compute_instance_template" "default" {
+
+
+  name           = "my-instance-template"
+  machine_type   = "e2-small"
+  can_ip_forward = false
+
+  tags = ["allow-ssh", "load-balanced-backend","allow-health-check"]
+
+  disk {
+    source_image = data.google_compute_image.ubuntu2204.id
+    auto_delete  = true
+    boot         = true
   }
+
+  network_interface {
+    network = google_compute_network.static.id
+    subnetwork = google_compute_subnetwork.my_custom_subnet.name
+  }
+
+
+
 }
 
 # MIG
