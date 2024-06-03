@@ -1,4 +1,3 @@
-#/Load Balancer/--------------------
 resource "google_compute_global_address" "default" {
   name     = "globaladdress"
 }
@@ -8,7 +7,7 @@ resource "google_compute_global_forwarding_rule" "default" {
   load_balancing_scheme = "EXTERNAL"
   port_range            = "80"
   target                = google_compute_target_http_proxy.default.id
-  ip_address            = google_compute_global_address.default.id
+  ip_address            = var.global_address
 }
 
 # http proxy
@@ -40,29 +39,7 @@ resource "google_compute_backend_service" "default" {
   }
 }
 
-resource "google_compute_instance_template" "default" {
 
-
-  name           = "my-instance-template"
-  machine_type   = "e2-small"
-  can_ip_forward = false
-
-  tags = ["allow-ssh", "load-balanced-backend","allow-health-check"]
-
-  disk {
-    source_image = data.google_compute_image.ubuntu2204.id
-    auto_delete  = true
-    boot         = true
-  }
-
-  network_interface {
-    network = google_compute_network.static.id
-    subnetwork = google_compute_subnetwork.my_custom_subnet.name
-  }
-
-
-
-}
 
 # MIG
 resource "google_compute_instance_group_manager" "default" {
@@ -73,7 +50,7 @@ resource "google_compute_instance_group_manager" "default" {
     port = 8080
   }
   version {
-    instance_template = google_compute_instance_template.default.id
+    instance_template = var.instance_template
     name              = "primary"
   }
   base_instance_name = "vm"
@@ -96,4 +73,3 @@ resource "google_compute_autoscaler" "autoscaler" {
     }
   }
 }
-#------------------////
