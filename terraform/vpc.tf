@@ -36,9 +36,9 @@ resource "google_compute_subnetwork" "my_custom_subnet_for_postgres" {
 # }
 
 #resource "google_service_networking_connection" "private_vpc_connection" {
- # network                 = google_compute_network.static.id
-  #service                 = "servicenetworking.googleapis.com"
-  #reserved_peering_ranges = [google_compute_global_address.private_ip_alloc.name]
+# network                 = google_compute_network.static.id
+#service                 = "servicenetworking.googleapis.com"
+#reserved_peering_ranges = [google_compute_global_address.private_ip_alloc.name]
 #}
 #---------------/
 #import {

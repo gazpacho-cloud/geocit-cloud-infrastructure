@@ -30,9 +30,9 @@ module "firewalls" {
 }
 
 module "load_balancer" {
-  source = "./modules/load_balancer"
+  source            = "./modules/load_balancer"
   instance_template = module.Autoscaling_instances.instance_template
-  global_address = google_compute_global_address.default.id
+  global_address    = google_compute_global_address.default.id
 
 }
 

@@ -1,6 +1,6 @@
-resource "google_compute_global_address" "default" {
-  name     = "globaladdress"
-}
+# resource "google_compute_global_address" "default" {
+#   name     = "globaladdress"
+# }
 resource "google_compute_global_forwarding_rule" "default" {
   name                  = "app-forwarding-rule"
   ip_protocol           = "TCP"
