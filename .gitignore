@@ -9,3 +9,4 @@ terraform.tfstate
 
 Bucket/ferrous-terrain-422816-i0-93fb4bb15c74.json
 Bucket/backend.tfy
+terraform/ansible_env
