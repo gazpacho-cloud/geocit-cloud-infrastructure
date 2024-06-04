@@ -97,3 +97,13 @@
    ```console
    terraform apply
    ```
+
+## Bucket module
+
+1. Navigate to Bucket directory
+2. Install gcloud cli (https://cloud.google.com/sdk/docs/install)
+3. Add env variable for GOOGLE_APPLICATION_CREDENTIALS, powershell example:
+    ```
+    $env:GOOGLE_APPLICATION_CREDENTIALS = "path\to\your\credentials\file"
+    ```
+4. This step is required only once to store tfstate in GCP Bucket.
