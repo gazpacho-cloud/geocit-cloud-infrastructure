@@ -1,7 +1,13 @@
-ferrous-terrain-422816-i0-93fb4bb15c74.json
+terraform/ferrous-terrain-422816-i0-93fb4bb15c74.json
 .terraform.lock.hcl
 terraform.tfstate.backup
 terraform.exe
 .terraform
 geocit-cloud-infrastructure
 .DS_Store
+terraform.tfstate
+
+Bucket/ferrous-terrain-422816-i0-93fb4bb15c74.json
+Bucket/backend.tfy
+terraform/ansible_env
+ansible/secret.txt

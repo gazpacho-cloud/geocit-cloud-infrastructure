@@ -1,10 +1,8 @@
-resource "google_compute_instance" "Instance_for_grafane" {
+resource "google_compute_instance" "instance_for_postgres" {
   count        = 1
-  name         = "instance-for-grafane"
+  name         = "instance-for-postgres"
   machine_type = "e2-small"
-  #треба описати A list of network tags to attach to the instance.
-  #tags = ["ssh-enabled", "bar"]
-  tags =["allow-all"]
+  tags         = ["allow-all"]
   boot_disk {
     initialize_params {
       image = "ubuntu-os-cloud/ubuntu-2204-lts"
@@ -18,7 +16,5 @@ resource "google_compute_instance" "Instance_for_grafane" {
       // Ephemeral public IP
       
     }
-
-
   }
 }

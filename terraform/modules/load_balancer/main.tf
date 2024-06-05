@@ -1,6 +1,3 @@
-resource "google_compute_global_address" "default" {
-  name     = "globaladdress"
-}
 resource "google_compute_global_forwarding_rule" "default" {
   name                  = "app-forwarding-rule"
   ip_protocol           = "TCP"
@@ -38,8 +35,6 @@ resource "google_compute_backend_service" "default" {
     capacity_scaler = 1.0
   }
 }
-
-
 
 # MIG
 resource "google_compute_instance_group_manager" "default" {
