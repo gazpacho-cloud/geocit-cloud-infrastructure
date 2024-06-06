@@ -89,3 +89,6 @@
   roles:
     - grafana
     - prometheus
+
+  roles:
+    - postgres

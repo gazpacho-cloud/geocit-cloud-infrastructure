@@ -1,14 +1,10 @@
-#/Load Balancer/--------------------
-resource "google_compute_global_address" "default" {
-  name     = "globaladdress"
-}
 resource "google_compute_global_forwarding_rule" "default" {
   name                  = "app-forwarding-rule"
   ip_protocol           = "TCP"
   load_balancing_scheme = "EXTERNAL"
   port_range            = "80"
   target                = google_compute_target_http_proxy.default.id
-  ip_address            = google_compute_global_address.default.id
+  ip_address            = var.global_address
 }
 
 # http proxy
@@ -39,14 +35,6 @@ resource "google_compute_backend_service" "default" {
     capacity_scaler = 1.0
   }
 }
-# health check
-resource "google_compute_health_check" "default" {
-  name     = "app-hc"
-
-  http_health_check {
-    port_specification = "USE_SERVING_PORT"
-  }
-}
 
 # MIG
 resource "google_compute_instance_group_manager" "default" {
@@ -57,7 +45,7 @@ resource "google_compute_instance_group_manager" "default" {
     port = 8080
   }
   version {
-    instance_template = google_compute_instance_template.default.id
+    instance_template = var.instance_template
     name              = "primary"
   }
   base_instance_name = "vm"
@@ -80,4 +68,3 @@ resource "google_compute_autoscaler" "autoscaler" {
     }
   }
 }
-#------------------////
