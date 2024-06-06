@@ -1,10 +1,9 @@
 resource "google_compute_network" "static" {
   name                            = "my-network"
-  delete_default_routes_on_create = true
   auto_create_subnetworks         = false
 }
 
-resource "google_compute_global_address" "default" {
+resource "google_compute_global_address" "static" {
   name = "globaladdress"
 }
 
@@ -25,5 +24,3 @@ resource "google_compute_subnetwork" "my_custom_subnet_for_postgres" {
   ip_cidr_range = "10.10.20.0/24"
   network       = google_compute_network.static.name
 }
-
-

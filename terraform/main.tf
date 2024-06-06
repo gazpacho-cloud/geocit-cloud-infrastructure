@@ -21,19 +21,24 @@ module "PSQL_DB" {
 
 module "dns" {
   source         = "./modules/dns"
-  global_address = google_compute_global_address.default.address
+  global_address = google_compute_global_address.static.address
 
 }
 module "firewalls" {
   source  = "./modules/firewalls"
-  network = google_compute_network.static.id
+  network = google_compute_network.static.name
 }
 
 module "load_balancer" {
   source            = "./modules/load_balancer"
   instance_template = module.Autoscaling_instances.instance_template
-  global_address    = google_compute_global_address.default.id
+  global_address    = google_compute_global_address.static.id
 
+}
+module "Compute_instance_for_jfrog" {
+  source     = "./modules/Compute_instance_for_jfrog"
+  network    = google_compute_network.static.id
+  subnetwork = google_compute_subnetwork.my_custom_subnet_for_grafane1.id
 }
 
 module "NAT" {
