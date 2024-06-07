@@ -43,7 +43,7 @@ resource "google_compute_firewall" "fw3" {
 
 resource "google_compute_firewall" "rules" {
   name    = "allow-ssh"
-  network = "my-network" 
+  network = var.network
 
   allow {
     protocol = "tcp"
@@ -53,7 +53,7 @@ resource "google_compute_firewall" "rules" {
 }
 resource "google_compute_firewall" "allow_connect_to_db" {
   name    = "allow-connect-to-db"
-  network = "my-network" 
+  network = var.network
 
   allow {
     protocol = "tcp"
@@ -64,7 +64,7 @@ resource "google_compute_firewall" "allow_connect_to_db" {
 }
 resource "google_compute_firewall" "db1" {
   name    = "db1"
-  network = "my-network" 
+  network = var.network
 
   allow {
     protocol = "tcp"
