@@ -1,19 +1,19 @@
 
-module "Autoscaling_instances" {
-  source     = "./modules/Autoscaling_instances"
+module "autoscaling_instances" {
+  source     = "./modules/autoscaling_instances"
   network    = google_compute_network.static.id
   subnetwork = google_compute_subnetwork.sub_for_instances.id
 
 }
 
-module "Compute_instance" {
-  source     = "./modules/Compute_instance"
+module "compute_instance" {
+  source     = "./modules/compute_instance"
   network    = google_compute_network.static.id
   subnetwork = google_compute_subnetwork.my_custom_subnet_for_grafane1.id
 }
 
-module "PSQL_DB" {
-  source  = "./modules/PSQL_DB"
+module "psql_db" {
+  source  = "./modules/psql_db"
   network = google_compute_network.static.id
   #vpc_peering_to_db = google_service_networking_connection.private_vpc_connection.id
   subnetwork = google_compute_subnetwork.my_custom_subnet_for_postgres.id
@@ -31,16 +31,16 @@ module "firewalls" {
 
 module "load_balancer" {
   source            = "./modules/load_balancer"
-  instance_template = module.Autoscaling_instances.instance_template
+  instance_template = module.autoscaling_instances.instance_template
   global_address    = google_compute_global_address.static.id
 
 }
-module "Compute_instance_for_jfrog" {
-  source     = "./modules/Compute_instance_for_jfrog"
+module "compute_instance_for_jfrog" {
+  source     = "./modules/compute_instance_for_jfrog"
   network    = google_compute_network.static.id
   subnetwork = google_compute_subnetwork.my_custom_subnet_for_grafane1.id
 }
 
-module "NAT" {
-  source = "./modules/NAT"
+module "nat" {
+  source = "./modules/nat"
 }
