@@ -6,8 +6,10 @@ terraform.exe
 geocit-cloud-infrastructure
 .DS_Store
 terraform.tfstate
-
+key.pem
+certificate.pem
 Bucket/ferrous-terrain-422816-i0-93fb4bb15c74.json
 Bucket/backend.tfy
 terraform/ansible_env
 ansible/secret.txt
+csr.csr

@@ -68,7 +68,7 @@ resource "google_compute_firewall" "db1" {
 
   allow {
     protocol = "tcp"
-    ports    = ["80"]
+    ports    = ["443"]
   }
 
   source_ranges = ["0.0.0.0/0"]
