@@ -24,6 +24,15 @@
   gather_facts: yes
   become: yes
   pre_tasks:
+    - name: Create ansible.cfg with required configuration
+      copy:
+        dest: ./ansible.cfg
+        content: |
+          [defaults]
+          
+          [ssh_connection]
+          pipelining=True
+
     - name: auth with GCloud
       shell: |
         gcloud auth activate-service-account --key-file /path/to/your/service-account-key.json  
