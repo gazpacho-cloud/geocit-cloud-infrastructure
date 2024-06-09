@@ -1,4 +1,24 @@
 ---
+- name: Install PostgreSQL and setup database
+  hosts: db_server
+  become: yes
+  become_method: sudo
+
+  vars:
+    postgresql_version: "14"
+    postgresql_user: "postgres"
+    postgresql_password: "postgres"
+    postgresql_db: "ss_demo_1"
+
+  roles:
+    - postgres 
+
+  handlers:
+    - name: Restart PostgreSQL
+      service:
+        name: postgresql
+        state: restarted
+  
 - name: deploy Geocitizen app
   hosts: localhost
   gather_facts: yes
@@ -24,7 +44,8 @@
         db_username: "{{ credentials.db_username }}" 
         db_password: "{{ credentials.db_password }}" 
         app_ip: "{{ credentials.app_ip }}"
-        grafana_prometheus_ip: "{{ credentials.grafana_prometheus_ip }}"
+        smtp_username: "{{ credentials.smtp_username }}"
+        smtp_password: "{{ credentials.smtp_password }}"
         map_api_key: "{{ credentials.map_key }}"
 
     - name: Copy repository
@@ -42,8 +63,8 @@
     - name: Change configuration for front-end
       replace:
         path: /geocit/src/main/resources/application.properties
-        regexp: 'localhost:8080'
-        replace: "{{ app_ip }}:8080"
+        regexp: 'http://localhost:8080'
+        replace: "https://{{ app_ip }}:443"
 
     - name: Change configuration in application.properties
       lineinfile:
@@ -54,13 +75,15 @@
         - { regexp: '^db\.url=', line: 'db.url=jdbc:postgresql://{{ db_host }}/{{ db_name }}' }
         - { regexp: '^db\.username=', line: 'db.username={{ db_username }}' }
         - { regexp: '^db\.password=', line: 'db.password={{ db_password }}' }
+        - { regexp: '^email\.username=', line: 'email.username={{ smtp_username }}' }
+        - { regexp: '^email\.password=', line: 'email.password={{ smtp_password }}' }
         - { regexp: '^map\.key=', line: 'map.key={{ map_api_key }}' }
 
     - name: Change configuration in js
       replace:
         path: /geocit/src/main/webapp/static/js/app.6313e3379203ca68a255.js
-        regexp: 'localhost'
-        replace: "{{ app_ip }}"
+        regexp: 'http://localhost:8080'
+        replace: "https://{{ app_ip }}:443"
 
   roles:
     - maven
@@ -69,26 +92,19 @@
 - name: deploy monitoring stack
   hosts: monitoring_instances
   become: yes
-  pre_tasks:
-    - name: get secret version for my-new-secret
-      command: gcloud secrets versions access latest --secret="my-new-secret"
-      register: secret_content
-
-    - name: parse secret json for my-new-secret
-      set_fact:
-        credentials: "{{ secret_content.stdout | from_json }}"
-
-    - name: inventory facts for monitoring stack
-      set_fact:
-        grafana_prometheus_ip: "{{ credentials.grafana_prometheus_ip }}"
-
-    - name: grafana prometheus IP
-      debug:
-        msg: "grafana prometheus IP is {{ grafana_prometheus_ip }}"
 
   roles:
     - grafana
     - prometheus
 
+- name: deploy jfrog
+  hosts: jfrog
+  become: yes
+  vars:
+    jfrog_home: "/opt/jfrog"
+    artifactory_image: "releases-docker.jfrog.io/jfrog/artifactory-oss:7.77.5"
+    artifactory_uid: 1030
+    artifactory_gid: 1030
+
   roles:
-    - postgres
+   - jfrog 
