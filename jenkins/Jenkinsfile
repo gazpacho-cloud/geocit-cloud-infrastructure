@@ -10,6 +10,7 @@ pipeline {
         stage('Ansible') {
             steps {
                 echo 'Ansible'
+                echo ${ANSIBLE_VAULT_PASSWORD_FILE}
                 dir("${WORKING_DIR }") {
                         sh "ansible-playbook -i inventory.ini --vault-password-file ${ANSIBLE_VAULT_PASSWORD_FILE} playbook.yml"
                         }
