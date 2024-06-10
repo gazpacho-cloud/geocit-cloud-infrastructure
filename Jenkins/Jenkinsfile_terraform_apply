@@ -24,21 +24,20 @@ pipeline{
 
 		stage('Terraform Init') {
             steps {
-                sh 'pwd'
-                sh 'ls -la'
-                sh 'terraform -chdir=terraform init'
+                sh 'cd terraform'
+                sh 'terraform init'
             }
         }
 
         stage('Terraform Plan') {
             steps {
-                sh 'terraform -chdir=terraform plan -out=plan.tfout -no-colour'
+                sh 'terraform plan -out=plan.tfout -no-colour'
             }
         }
 
         stage('Terraform Apply') {
             steps {
-                sh 'terraform apply -chdir=terraform plan -auto-approve plan.tfout -no-colour'
+                sh 'terraform apply plan -auto-approve plan.tfout -no-colour'
             }
         }
     }
