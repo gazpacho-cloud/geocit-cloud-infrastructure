@@ -26,7 +26,8 @@ pipeline{
 		stage('Terraform Init') {
             steps {
                 dir("${TERRAFORM_DIR}") {
-                        sh 'ls -alR'
+                        sh "sudo chown -R jenkins:jenkins /var/lib/jenkins/workspace/terraform-apply-job/terraform/modules"
+                        sh "sudo chmod -R 755 /var/lib/jenkins/workspace/terraform-apply-job/terraform/modules"
                         sh 'terraform init'
                         }
             }
