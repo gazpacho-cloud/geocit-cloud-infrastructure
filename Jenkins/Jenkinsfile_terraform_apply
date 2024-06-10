@@ -26,6 +26,7 @@ pipeline{
 		stage('Terraform Init') {
             steps {
                 dir("${TERRAFORM_DIR}") {
+                        sh 'ls -alR'
                         sh 'terraform init'
                         }
             }
