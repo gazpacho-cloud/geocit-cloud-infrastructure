@@ -38,4 +38,3 @@ resource "google_compute_backend_service" "default" {
     capacity_scaler = 1.0
   }
 }
-
