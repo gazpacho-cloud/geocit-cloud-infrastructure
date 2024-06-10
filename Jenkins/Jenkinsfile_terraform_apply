@@ -5,7 +5,7 @@ pipeline{
         TOKEN = credentials('telegramToken')
         CHAT_ID = credentials('telegramChatId')
         GOOGLE_CREDENTIALS = credentials('gcp-service-account')
-        TERRAFORM_DIR = "${WORKSPACE}/terraform"
+        TERRAFORM_DIR = "${WORKSPACE}/terraform/main_infrastructure"
     }
 
     stages{ 
@@ -26,8 +26,6 @@ pipeline{
 		stage('Terraform Init') {
             steps {
                 dir("${TERRAFORM_DIR}") {
-                        sh "sudo chown -R jenkins:jenkins /var/lib/jenkins/workspace/terraform-apply-job/terraform/modules"
-                        sh "sudo chmod -R 755 /var/lib/jenkins/workspace/terraform-apply-job/terraform/modules"
                         sh 'terraform init'
                         }
             }
