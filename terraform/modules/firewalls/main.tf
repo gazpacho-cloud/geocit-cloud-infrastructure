@@ -51,6 +51,7 @@ resource "google_compute_firewall" "rules" {
   }
   source_ranges = ["91.224.69.0/24","46.200.235.0/24", "35.235.240.0/20"]
 }
+
 resource "google_compute_firewall" "allow_connect_to_db" {
   name    = "allow-connect-to-db"
   network = var.network
@@ -62,6 +63,7 @@ resource "google_compute_firewall" "allow_connect_to_db" {
 
   source_ranges = ["0.0.0.0/0"]
 }
+
 resource "google_compute_firewall" "db1" {
   name    = "db1"
   network = var.network
@@ -73,6 +75,7 @@ resource "google_compute_firewall" "db1" {
 
   source_ranges = ["0.0.0.0/0"]
 }
+
 resource "google_compute_firewall" "target_grafane" {
 
   name = "website-grafane"

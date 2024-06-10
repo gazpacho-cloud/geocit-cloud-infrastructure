@@ -13,3 +13,7 @@ Bucket/backend.tfy
 terraform/ansible_env
 ansible/secret.txt
 csr.csr
+terraform/domain.cert.pem
+terraform/intermediate.cert.pem
+terraform/private.key.pem
+terraform/public.key.pem
