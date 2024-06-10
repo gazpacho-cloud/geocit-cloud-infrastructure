@@ -4,13 +4,13 @@ pipeline {
     environment {
         ANSIBLE_VAULT_PASSWORD_FILE = credentials('ANSIBLE_VAULT_PASSWORD')
         GOOGLE_APPLICATION_CREDENTIALS = credentials('gcp-service-account')
-        WORKING_DIR = "${WORKSPACE}/ansible"
+        WORKING_DIR = "./ansible"
     }
     stages {
         stage('Ansible') {
             steps {
                 echo 'Ansible'
-                dir("${WORKING_DIR }") {
+                dir(".") {
                         sh "ansible-playbook -i inventory.ini -l node_exporters  --vault-password-file ${ANSIBLE_VAULT_PASSWORD_FILE} playbook.yml"
                         }
             }

@@ -1,5 +1,3 @@
-
-
 module "autoscaling_instances" {
   depends_on = [google_compute_network.static, time_sleep.wait_120_seconds]
   source     = "./modules/autoscaling_instances"

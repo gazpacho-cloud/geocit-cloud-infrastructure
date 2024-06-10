@@ -14,6 +14,7 @@ resource "google_compute_firewall" "fw1" {
   }
   direction = "INGRESS"
 }
+
 resource "google_compute_firewall" "fw2" {
   depends_on = [google_compute_firewall.fw1]
   name = "website-fw-2"
@@ -39,7 +40,6 @@ resource "google_compute_firewall" "fw3" {
   target_tags = ["load-balanced-backend"]
   direction = "INGRESS"
 }
-
 
 resource "google_compute_firewall" "rules" {
   name    = "allow-ssh"
