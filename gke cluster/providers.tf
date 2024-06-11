@@ -1,5 +1,5 @@
 provider "google" {
-  credentials = file("${path.module}/../ferrous-terrain-422816-i0-b0707ebf99c4.json")
+  credentials = file("${path.module}/../you-json-key.json")
   project     = var.project
   region      = var.region
 }
