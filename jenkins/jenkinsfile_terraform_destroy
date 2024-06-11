@@ -20,6 +20,12 @@ pipeline{
                 withCredentials([file(credentialsId: 'gcp-service-account', variable: 'GCP_SA_KEY')]) {
                     sh 'export GOOGLE_APPLICATION_CREDENTIALS="$GCP_SA_KEY"'
                 }
+                withCredentials([file(credentialsId: 'load-key', variable: 'GCP_LB_KEY')]) {
+                    sh 'export private_key="$GCP_LB_KEY"'
+                }
+                withCredentials([file(credentialsId: 'load-certificate', variable: 'GCP_LB_CERT')]) {
+                    sh 'export certificate="$GCP_LB_CERT"'
+                }
             }
         }
 
