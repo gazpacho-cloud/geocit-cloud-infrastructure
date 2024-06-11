@@ -27,7 +27,7 @@ pipeline{
             steps {
                 dir("${TERRAFORM_DIR}") {
                         sh 'pwd'
-                        sh 'ls -al'
+                        sh 'ls -al ../modules'
                         sh 'terraform init'
                         }
             }
