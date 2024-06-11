@@ -1,6 +1,6 @@
 ---
 - name: deploy Geocitizen app
-  hosts: "10.10.0.27"
+  hosts: geocit
   gather_facts: yes
   become: yes
   pre_tasks:
