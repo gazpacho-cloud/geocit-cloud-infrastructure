@@ -4,16 +4,17 @@ pipeline {
     environment {
         ANSIBLE_VAULT_PASSWORD_FILE = credentials('ANSIBLE_VAULT_PASSWORD')
         GOOGLE_APPLICATION_CREDENTIALS = credentials('gcp-service-account')
-        WORKING_DIR = "./ansible"
+        WORKING_DIR = "/home/wushatneen/geocit/ansible/"
     }
     stages {
         stage('Ansible') {
             steps {
                 echo 'Ansible'
-                echo ${ANSIBLE_VAULT_PASSWORD_FILE}
                 dir("${WORKING_DIR }") {
-                        sh "ansible-playbook -i inventory.ini --vault-password-file ${ANSIBLE_VAULT_PASSWORD_FILE} playbook.yml"
+                        withCredentials([file(credentialsId: 'ANSIBLE_VAULT_PASSWORD', variable: 'ansibleVaultKeyFile')]) {
+                        sh 'ansible-playbook playbook.yml -i inventory.ini --vault-password-file ${ansibleVaultKeyFile} --user wushatneen --key-file /home/wushatneen/.ssh/id_rsa'
                         }
+                }
             }
         }
     }
