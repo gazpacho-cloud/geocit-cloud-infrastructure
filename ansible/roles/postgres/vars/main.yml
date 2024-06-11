@@ -1,0 +1,4 @@
+postgresql_version: '14'
+postgresql_user: postgres
+postgresql_password: postgres
+postgresql_db: ss_demo_1
