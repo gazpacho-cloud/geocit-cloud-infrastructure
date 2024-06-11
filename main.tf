@@ -1,36 +1,41 @@
+resource "google_container_cluster" "primary" {
+  name     = var.cluster_name
+  location = var.region
 
-module "Autoscaling_instances" {
-  source = "./modules/Autoscaling_instances"
-  network = google_compute_network.static.id
-  subnetwork = google_compute_subnetwork.sub_for_instances.id
-  
-}
-module "Compute_instance" {
-  source = "./modules/Compute_instance"
-  network = google_compute_network.static.id
-  subnetwork = google_compute_subnetwork.my_custom_subnet_for_grafane1.id
-}
-module "dns" {
-  source = "./modules/dns"
-  global_address = google_compute_global_address.default.address
+  initial_node_count = 1
 
-}
-module "firewalls" {
-  source = "./modules/firewalls"
-  network = google_compute_network.static.id
-}
-module "load_balancer" {
-  source = "./modules/load_balancer"
-  instance_template = module.Autoscaling_instances.instance_template
-  global_address = google_compute_global_address.default.id
+  node_config {
+    machine_type = var.machine_type
+    disk_size_gb = 30
 
-}
-module "NAT" {
-  source = "./modules/NAT"
-}
-module "PSQL_DB" {
-  source = "./modules/PSQL_DB"
-  network = google_compute_network.static.id
-  vpc_peering_to_db = google_service_networking_connection.private_vpc_connection.id
+    oauth_scopes = [
+      "https://www.googleapis.com/auth/cloud-platform",
+    ]
+  }
 
+  timeouts {
+    create = "30m"
+    update = "40m"
+  }
+}
+
+resource "google_container_node_pool" "primary_nodes" {
+  name       = "primary-node-pool"
+  cluster    = google_container_cluster.primary.name
+  location   = google_container_cluster.primary.location
+  node_count = 1
+
+  node_config {
+    machine_type = var.machine_type
+    disk_size_gb = 30
+
+    oauth_scopes = [
+      "https://www.googleapis.com/auth/cloud-platform",
+    ]
+  }
+
+  timeouts {
+    create = "30m"
+    update = "40m"
+  }
 }

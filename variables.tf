@@ -1,16 +1,19 @@
-variable "gcp_region" {
-    type = string
-    default = "europe-central2"
+variable "project" {
+  description = "The GCP project ID"
+  type        = string
 }
-variable "gcp_project" {
-    type = string
-    default = "ferrous-terrain-422816-i0"
+
+variable "region" {
+  description = "The GCP region"
+  default     = "europe-west3"
 }
-variable "gcp_key" {
-    type = string
-    default = "ferrous-terrain-422816-i0-93fb4bb15c74.json"
+
+variable "cluster_name" {
+  description = "The name of the Kubernetes cluster"
+  default     = "super-awesome-cluster"
 }
-variable "gcp_zone" {
-    type = string
-    default = "europe-central2-c"
+
+variable "machine_type" {
+  description = "The machine type to use for the Kubernetes cluster nodes"
+  default     = "e2-small"
 }
