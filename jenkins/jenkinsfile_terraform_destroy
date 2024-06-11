@@ -25,7 +25,7 @@ pipeline{
 
 		stage('Terraform Init') {
             steps {
-                dir("${WORKING_DIR }") {
+                dir("${TERRAFORM_DIR}") {
                         sh 'terraform fmt'
                         sh 'terraform init'}
             }
@@ -36,7 +36,7 @@ pipeline{
                 ok "Destroy"
             }
             steps {
-                dir("${WORKING_DIR }") {
+                dir("${TERRAFORM_DIR}") {
                         sh 'terraform destroy'}
             }
         }
