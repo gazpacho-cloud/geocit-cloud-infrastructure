@@ -1,0 +1,64 @@
+pipeline{ 
+    agent any
+    
+     environment {
+        TOKEN = credentials('telegramToken')
+        CHAT_ID = credentials('telegramChatId')
+        GOOGLE_CREDENTIALS = credentials('gcp-service-account')
+        TERRAFORM_DIR = "${WORKSPACE}/terraform"
+    }
+
+    stages{ 
+		stage('Git Checkout') {
+			steps {
+				git branch: 'GEO-6-Setup-initial-Jenkins-pipelines', url: 'https://github.com/gazpacho-cloud/geocit-cloud-infrastructure'
+				}
+		}
+
+        stage('Copy Credentials') {
+            steps {
+                withCredentials([file(credentialsId: 'gcp-service-account', variable: 'GCP_SA_KEY')]) {
+                    sh 'export GOOGLE_APPLICATION_CREDENTIALS="$GCP_SA_KEY"'
+                }
+            }
+        }
+
+		stage('Terraform Init') {
+            steps {
+                dir("${WORKING_DIR }") {
+                        sh 'terraform fmt'
+                        sh 'terraform init'}
+            }
+        }
+
+        stage('Terraform Plan') {
+            steps {
+                dir("${WORKING_DIR }") {
+                    sh 'terraform plan -out=plan.tfout -no-colour'}
+            }
+        }
+
+        stage('Terraform Apply') {
+            steps {
+                dir("${WORKING_DIR }") {
+                    sh 'terraform apply plan -auto-approve plan.tfout -no-colour'}
+            }
+        }
+    }
+    
+    post {
+        always {
+            cleanWs()
+        }
+        success {
+            script{
+                sh "curl --location --request POST 'https://api.telegram.org/bot${TOKEN}/sendMessage' --form text='Build ${env.JOB_NAME} is successful: ${env.BUILD_URL}' --form chat_id='${CHAT_ID}'"
+            }
+        }
+        failure {
+            script{
+                sh "curl --location --request POST 'https://api.telegram.org/bot${TOKEN}/sendMessage' --form text='Build ${env.JOB_NAME} failed: ${env.BUILD_URL}' --form chat_id='${CHAT_ID}'"
+            }
+        }
+    }
+}

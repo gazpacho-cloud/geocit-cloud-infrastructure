@@ -1,0 +1,74 @@
+- name: Import PostgreSQL signing key
+  apt_key:
+    url: https://www.postgresql.org/media/keys/ACCC4CF8.asc
+    state: present
+
+- name: Ensure PostgreSQL repository is present
+  apt_repository:
+    repo: "deb http://apt.postgresql.org/pub/repos/apt {{ ansible_distribution_release }}-pgdg main"
+    state: present
+    filename: "pgdg"
+
+- name: Update APT package list
+  apt:
+    update_cache: yes
+
+- name: Install PostgreSQL
+  apt:
+    name: "postgresql-{{ postgresql_version }}"
+    state: present
+
+- name: Install PostgreSQL contrib
+  apt:
+    name: "postgresql-contrib-{{ postgresql_version }}"
+    state: present
+
+- name: Install Python
+  apt:
+    name: "python3-pip"
+    state: present
+
+- name: Install psycopg2-binary
+  pip:
+    name: "psycopg2-binary"
+    state: present
+
+- name: Ensure PostgreSQL service is enabled and started
+  service:
+    name: postgresql
+    state: started
+    enabled: yes
+
+- name: Set PostgreSQL user password
+  become_user: postgres
+  become_method: sudo
+  postgresql_user:
+    name: "{{ postgresql_user }}"
+    password: "{{ postgresql_password }}"
+    state: present
+
+- name: Create PostgreSQL database
+  become_user: postgres
+  postgresql_db:
+    name: "{{ postgresql_db }}"
+    owner: "{{ postgresql_user }}"
+    encoding: UTF8
+    lc_collate: en_US.UTF-8
+    lc_ctype: en_US.UTF-8
+    template: template0
+    state: present
+
+- name: Ensure line exists in pg_hba.conf
+  lineinfile:
+    path: /etc/postgresql/{{ postgresql_version }}/main/pg_hba.conf
+    state: present
+    line: 'host all all 0.0.0.0/0 scram-sha-256'
+  notify: Restart PostgreSQL
+
+- name: Ensure listen_addresses is set to '*'
+  lineinfile:
+    path: /etc/postgresql/{{ postgresql_version }}/main/postgresql.conf
+    state: present
+    regexp: '^#?listen_addresses\s*=\s*.*'
+    line: "listen_addresses = '*'"
+  notify: Restart PostgreSQL
