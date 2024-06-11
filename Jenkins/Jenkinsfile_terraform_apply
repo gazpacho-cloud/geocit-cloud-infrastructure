@@ -5,7 +5,7 @@ pipeline{
         TOKEN = credentials('telegramToken')
         CHAT_ID = credentials('telegramChatId')
         GOOGLE_CREDENTIALS = credentials('gcp-service-account')
-        TERRAFORM_DIR = "${WORKSPACE}/terraform/main_infrastructure"
+        TERRAFORM_DIR = "${WORKSPACE}/terraform"
     }
 
     stages{ 
@@ -25,30 +25,27 @@ pipeline{
 
 		stage('Terraform Init') {
             steps {
-                dir("${TERRAFORM_DIR}") {
-                        sh 'pwd'
-                        sh 'ls -al ../modules'
-                        sh 'terraform init'
-                        }
+                dir("${WORKING_DIR }") {
+                        sh 'terraform fmt'
+                        sh 'terraform init'}
             }
         }
 
         stage('Terraform Plan') {
             steps {
-                dir("${TERRAFORM_DIR}") {
-                    sh 'terraform plan -out=plan.tfout -no-colour'
-                    }
+                dir("${WORKING_DIR }") {
+                    sh 'terraform plan -out=plan.tfout -no-colour'}
             }
         }
 
         stage('Terraform Apply') {
             steps {
-                dir("${TERRAFORM_DIR}") {
-                    sh 'terraform apply plan -auto-approve plan.tfout -no-colour'
-                    }
+                dir("${WORKING_DIR }") {
+                    sh 'terraform apply plan -auto-approve plan.tfout -no-colour'}
             }
         }
     }
+    
     post {
         always {
             cleanWs()

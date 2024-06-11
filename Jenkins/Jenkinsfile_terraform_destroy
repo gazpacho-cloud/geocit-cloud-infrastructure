@@ -5,9 +5,10 @@ pipeline{
         TOKEN = credentials('telegramToken')
         CHAT_ID = credentials('telegramChatId')
         GOOGLE_CREDENTIALS = credentials('gcp-service-account')
+        TERRAFORM_DIR = "${WORKSPACE}/terraform"
     }
 
-    stages{ 
+    stages{
 		stage('Git Checkout') {
 			steps {
 				git branch: 'GEO-6-Setup-initial-Jenkins-pipelines', url: 'https://github.com/gazpacho-cloud/geocit-cloud-infrastructure'
@@ -24,17 +25,19 @@ pipeline{
 
 		stage('Terraform Init') {
             steps {
-                sh 'terraform -chdir=terraform init'
+                dir("${WORKING_DIR }") {
+                        sh 'terraform fmt'
+                        sh 'terraform init'}
             }
         }
-
         stage('Destroy') {
             input {
                 message "Do you want to destroy the infrastructure?"
                 ok "Destroy"
             }
             steps {
-                sh 'terraform -chdir=terraform destroy'
+                dir("${WORKING_DIR }") {
+                        sh 'terraform destroy'}
             }
         }
     }

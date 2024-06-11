@@ -18,5 +18,5 @@ csr.csr
 jenkins_creds.txt
 user_add_true.groovy
 
-terraform/main_infrastructure/certificate.pem
-terraform/main_infrastructure/key.pem
+terraform/certificate.pem
+terraform/key.pem
