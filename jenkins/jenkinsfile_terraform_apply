@@ -16,9 +16,9 @@ pipeline{
 
         stage('Copy Credentials') {
             steps {
-                withCredentials([file(credentialsId: 'gcp-service-account', variable: GCP_SA_KEY)]) {
+                withCredentials([file(credentialsId: 'gcp-service-account', variable: "GCP_SA_KEY")]) {
                     dir("${TERRAFORM_DIR}") {
-                        sh 'echo "${GCP_SA_KEY}" > ferrous-terrain-422816-i0-93fb4bb15c74.json'
+                        sh 'echo "${GCP_SA_KEY}"'
                         sh 'cat ferrous-terrain-422816-i0-93fb4bb15c74.json'
                     }
                 }
