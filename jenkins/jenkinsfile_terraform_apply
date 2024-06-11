@@ -34,14 +34,14 @@ pipeline{
         stage('Terraform Plan') {
             steps {
                 dir("${TERRAFORM_DIR}") {
-                    sh 'terraform plan -out=plan.tfout -no-colour'}
+                    sh 'terraform plan -out=plan.tfout -no-color'}
             }
         }
 
         stage('Terraform Apply') {
             steps {
                 dir("${TERRAFORM_DIR}") {
-                    sh 'terraform apply plan -auto-approve plan.tfout -no-colour'}
+                    sh 'terraform apply plan -auto-approve plan.tfout -no-color'}
             }
         }
     }
