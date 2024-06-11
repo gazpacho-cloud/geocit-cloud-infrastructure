@@ -17,7 +17,7 @@ pipeline{
         stage('Copy Credentials') {
             steps {
                 withCredentials([file(credentialsId: 'gcp-service-account', variable: 'GCP_SA_KEY')]) {
-                    sh 'export GOOGLE_APPLICATION_CREDENTIALS="$GCP_SA_KEY"'
+                    sh 'echo "${GCP_SA_KEY}" > ${TERRAFORM_DIR}/ferrous-terrain-422816-i0-93fb4bb15c74.json'
                 }
                 withCredentials([file(credentialsId: 'load-key', variable: 'GCP_LB_KEY')]) {
                     sh 'echo "${GCP_LB_KEY}" > ${TERRAFORM_DIR}/key.pem'
