@@ -21,10 +21,10 @@ pipeline{
                     sh 'export GOOGLE_APPLICATION_CREDENTIALS="$GCP_SA_KEY"'
                 }
                 withCredentials([file(credentialsId: 'load-key', variable: 'GCP_LB_KEY')]) {
-                    sh 'export private_key="$GCP_LB_KEY"'
+                    sh 'echo "${GCP_LB_KEY}" > ${TERRAFORM_DIR}/key.pem'
                 }
                 withCredentials([file(credentialsId: 'load-certificate', variable: 'GCP_LB_CERT')]) {
-                    sh 'export certificate="$GCP_LB_CERT"'
+                    sh 'echo "${GCP_LB_CERT}" > ${TERRAFORM_DIR}/certificate.pem'
                 }
             }
         }
