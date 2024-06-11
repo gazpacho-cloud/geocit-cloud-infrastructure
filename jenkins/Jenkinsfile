@@ -2,7 +2,7 @@
 pipeline {
     agent any
     environment {
-        //ANSIBLE_VAULT_PASSWORD_FILE = credentials('ANSIBLE_VAULT_PASSWORD')
+        ANSIBLE_VAULT_PASSWORD_FILE = credentials('ANSIBLE_VAULT_PASSWORD')
         //GOOGLE_APPLICATION_CREDENTIALS = credentials('gcp-service-account')
         WORKING_DIR = "./ansible"
     }
