@@ -1,6 +1,7 @@
 - name: Install PostgreSQL and setup database
-  hosts: dbserver
+  hosts: dbservers
   become: 'yes'
+  
   vars:
     postgresql_version: '14'
     postgresql_user: postgres
