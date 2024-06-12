@@ -6,6 +6,7 @@
 
 - name: Update apt cache
   apt:
+    upgrade: dist
     force_apt_get: yes
     update_cache: yes
   

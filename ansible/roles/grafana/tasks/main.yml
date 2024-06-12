@@ -12,6 +12,7 @@
 
 - name: update apt cache
   apt:
+    force_apt_get: yes
     update_cache: yes
 
 - name: install grafana
