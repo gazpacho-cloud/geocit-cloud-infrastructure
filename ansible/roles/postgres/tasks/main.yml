@@ -1,11 +1,11 @@
 ---
-- name: Ensure PostgreSQL repository is present
-  apt_repository:
-    repo: >-
-      deb http://apt.postgresql.org/pub/repos/apt {{
-      ansible_distribution_release }}-pgdg main
-    state: present
-    filename: pgdg
+# - name: Ensure PostgreSQL repository is present
+#   apt_repository:
+#     repo: >-
+#       deb http://apt.postgresql.org/pub/repos/apt {{
+#       ansible_distribution_release }}-pgdg main
+#     state: present
+#     filename: pgdg
 
 - name: Import PostgreSQL signing key
   apt_key:
