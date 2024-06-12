@@ -2,7 +2,7 @@
 pipeline {
     agent any
     environment {
-        ANSIBLE_VAULT_PASSWORD_FILE = credentials('ANSIBLE_VAULT_PASSWORD')
+        //ANSIBLE_VAULT_PASSWORD_FILE = credentials('ANSIBLE_VAULT_PASSWORD')
         //GOOGLE_APPLICATION_CREDENTIALS = credentials('gcp-service-account')
         WORKING_DIR = "./ansible"
     }
@@ -12,7 +12,7 @@ pipeline {
                 echo 'Ansible'
                 dir("${WORKING_DIR }") {
                         //sh 'ansible-playbook playbook.yml -i inventory.ini --vault-password-file ${ANSIBLE_VAULT_PASSWORD_FILE} --user wushatneen --key-file /home/wushatneen/.ssh/id_rsa'
-                    ansiblePlaybook playbook: 'playbook.yml', inventory: 'inventory.yml', credentialsId: 'wushatneen', vaultCredentialsId: ${ANSIBLE_VAULT_PASSWORD_FILE}, extras: '--ssh-extra-args="-o StrictHostKeyChecking=no"'            
+                    ansiblePlaybook playbook: 'playbook.yml', inventory: 'inventory.yml', credentialsId: 'wushatneen', vaultCredentialsId: 'ANSIBLE_VAULT_PASSWORD', extras: '--ssh-extra-args="-o StrictHostKeyChecking=no"'            
                 }
             }
         }
