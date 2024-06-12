@@ -4,6 +4,11 @@
   gather_facts: yes
   become: yes
   pre_tasks:
+    - name: Transfer file key from control node to geocit node 
+      synchronize:
+        src: /var/lib/jenkins/key.file
+        dest: ~/key.file
+      #delegate_to: geocit
     - name: auth with GCloud
       shell: |
         gcloud auth activate-service-account --key-file /var/lib/jenkins/key.file
