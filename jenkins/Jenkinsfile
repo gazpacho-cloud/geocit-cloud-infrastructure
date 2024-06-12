@@ -33,4 +33,5 @@ pipeline {
                 sh "curl --location --request POST 'https://api.telegram.org/bot${TOKEN}/sendMessage' --form text='Build ${env.JOB_NAME} failed:\n ${env.BUILD_URL}' --form chat_id='${CHAT_ID}'"
             }
     }
+    }
 }
