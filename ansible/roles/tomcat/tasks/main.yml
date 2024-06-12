@@ -19,7 +19,7 @@
     daemon_reload: yes
 
 - name: Copy war file to tomcat webapps directory
-  copy:
+  template:
     src: /geocit/target/citizen.war
     dest: /var/lib/tomcat9/webapps/citizen.war
     owner: tomcat
