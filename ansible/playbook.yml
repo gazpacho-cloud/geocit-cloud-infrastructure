@@ -5,10 +5,8 @@
   become: yes
   pre_tasks:
     - name: auth with GCloud
-      env:
-        
       shell: |
-        gcloud auth activate-service-account --key-file dasd
+        gcloud auth activate-service-account --key-file GOOGLE_APPLICATION_CREDENTIALS
       when: not ansible_check_mode
 
     - name: get secret version for my-new-secret
