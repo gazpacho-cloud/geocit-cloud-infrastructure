@@ -30,7 +30,6 @@ pipeline{
                 withCredentials([file(credentialsId: 'load-certificate', variable: 'GCP_LB_CERT')]) {
                     dir("${TERRAFORM_DIR}") {
                         sh "cp \${GCP_LB_CERT} ."
-                        sh "ls -al"
                     }
                 }
             }

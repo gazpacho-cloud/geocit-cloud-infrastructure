@@ -4,11 +4,11 @@ pipeline{
      environment {
         TOKEN = credentials('telegramToken')
         CHAT_ID = credentials('telegramChatId')
-        GOOGLE_CREDENTIALS = credentials('gcp-service-account')
         TERRAFORM_DIR = "${WORKSPACE}/terraform"
+        GOOGLE_APPLICATION_CREDENTIALS = credentials('gcp-service-account')
     }
 
-    stages{
+    stages{ 
 		stage('Git Checkout') {
 			steps {
 				git branch: 'GEO-6-Setup-initial-Jenkins-pipelines', url: 'https://github.com/gazpacho-cloud/geocit-cloud-infrastructure'
@@ -18,13 +18,19 @@ pipeline{
         stage('Copy Credentials') {
             steps {
                 withCredentials([file(credentialsId: 'gcp-service-account', variable: 'GCP_SA_KEY')]) {
-                    sh 'export GOOGLE_APPLICATION_CREDENTIALS="$GCP_SA_KEY"'
+                    dir("${TERRAFORM_DIR}") {
+                        sh "cp \${GCP_SA_KEY} ."
+                    }
                 }
                 withCredentials([file(credentialsId: 'load-key', variable: 'GCP_LB_KEY')]) {
-                    sh 'echo "${GCP_LB_KEY}" > ${TERRAFORM_DIR}/key.pem'
+                    dir("${TERRAFORM_DIR}") {
+                        sh "cp \${GCP_LB_KEY} ."
+                    }
                 }
                 withCredentials([file(credentialsId: 'load-certificate', variable: 'GCP_LB_CERT')]) {
-                    sh 'echo "${GCP_LB_CERT}" > ${TERRAFORM_DIR}/certificate.pem'
+                    dir("${TERRAFORM_DIR}") {
+                        sh "cp \${GCP_LB_CERT} ."
+                    }
                 }
             }
         }
@@ -36,6 +42,7 @@ pipeline{
                         sh 'terraform init'}
             }
         }
+
         stage('Destroy') {
             input {
                 message "Do you want to destroy the infrastructure?"
@@ -47,6 +54,7 @@ pipeline{
             }
         }
     }
+    
     post {
         always {
             cleanWs()
