@@ -1,15 +1,15 @@
 ---
-- name: HTTPS Apt
-  apt:
-    name: apt-transport-https
-    state: present 
-    
+# - name: HTTPS Apt
+#   apt:
+#     name: apt-transport-https
+#     state: present 
+
 - name: Update apt cache
-  apt:
+  apt-get:
     update_cache: yes
   
 - name: install java
-  apt:
+  apt-get:
     name: openjdk-11-jdk
     state: present
 
