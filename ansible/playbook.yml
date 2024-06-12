@@ -95,7 +95,7 @@
 #     - grafana
 #     - prometheus
 - name: Install PostgreSQL and setup database
-  hosts: dbservers
+  hosts: db_servers
   become: 'yes'
   roles:
     - postgres
