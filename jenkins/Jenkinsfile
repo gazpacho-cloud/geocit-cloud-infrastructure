@@ -7,12 +7,13 @@ pipeline {
         WORKING_DIR = "./ansible"
     }
     stages {
+        
         stage('Ansible') {
             steps {
                 echo 'Ansible'
                 dir("${WORKING_DIR}") {
                         //sh 'ansible-playbook playbook.yml -i inventory.ini --vault-password-file ${ANSIBLE_VAULT_PASSWORD_FILE} --user wushatneen --key-file /home/wushatneen/.ssh/id_rsa'
-                    ansiblePlaybook playbook: 'playbook.yml', inventory: 'inventory.ini', credentialsId: 'wushatneen', extras: '--ssh-extra-args="-o StrictHostKeyChecking=no"'            
+                    ansiblePlaybook playbook: 'playbook.yml', inventory: 'inventory.ini', credentialsId: 'ansible-user', extras: '--ssh-extra-args="-o StrictHostKeyChecking=no"'            
                 }
             }
         }
