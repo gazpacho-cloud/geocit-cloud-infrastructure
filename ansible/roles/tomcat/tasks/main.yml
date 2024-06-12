@@ -19,12 +19,8 @@
     daemon_reload: yes
 
 - name: Copy war file to tomcat webapps directory
-  template:
-    src: /geocit/target/citizen.war
-    dest: /var/lib/tomcat9/webapps/citizen.war
-    owner: tomcat
-    group: tomcat
-    mode: 0644
+  shell: |
+    cp /geocit/target/citizen.war /var/lib/tomcat9/webapps/citizen.war && chown tomcat:tomcat /var/lib/tomcat9/webapps/citizen.war && chmod 644 /var/lib/tomcat9/webapps/citizen.war
 
 - name: Start and enable Tomcat9
   systemd:
