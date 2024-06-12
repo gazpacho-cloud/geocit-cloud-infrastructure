@@ -4,6 +4,7 @@ pipeline{
      environment {
         TOKEN = credentials('telegramToken')
         CHAT_ID = credentials('telegramChatId')
+        GOOGLE_APPLICATION_CREDENTIALS = credentials{'gcp-service-account'}
         TERRAFORM_DIR = "${WORKSPACE}/terraform"
     }
 
@@ -18,18 +19,16 @@ pipeline{
             steps {
                 withCredentials([file(credentialsId: 'gcp-service-account', variable: "GCP_SA_KEY")]) {
                     dir("${TERRAFORM_DIR}") {
-                        sh 'echo ${GCP_SA_KEY},H1'
-                        sh 'cat ferrous-terrain-422816-i0-93fb4bb15c74.json'
-                    }
+                        sh 'export GOOGLE_APPLICATION_CREDENTIALS="$GCP_SA_KEY"'
                 }
                 withCredentials([file(credentialsId: 'load-key', variable: 'GCP_LB_KEY')]) {
                     dir("${TERRAFORM_DIR}") {
-                        sh 'echo "${GCP_LB_KEY}" > key.pem'
+                        sh 'writeFile file: "key.pem", text: GCP_LB_KEY'
                     }
                 }
                 withCredentials([file(credentialsId: 'load-certificate', variable: 'GCP_LB_CERT')]) {
                     dir("${TERRAFORM_DIR}") {
-                        sh 'echo "${GCP_LB_CERT}" > certificate.pem'
+                        sh 'writeFile file: "certificate.pem", text: GCP_LB_CERT'
                     }
                 }
             }
