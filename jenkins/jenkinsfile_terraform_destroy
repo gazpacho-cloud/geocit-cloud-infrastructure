@@ -50,11 +50,11 @@ pipeline{
             }
             steps {
                 dir("${TERRAFORM_DIR}") {
-                        sh 'terraform destroy'}
+                        sh 'terraform destroy -auto-approve'}
             }
         }
     }
-    
+
     post {
         always {
             cleanWs()
