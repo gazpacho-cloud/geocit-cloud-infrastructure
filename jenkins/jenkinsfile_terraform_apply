@@ -5,6 +5,7 @@ pipeline{
         TOKEN = credentials('telegramToken')
         CHAT_ID = credentials('telegramChatId')
         TERRAFORM_DIR = "${WORKSPACE}/terraform"
+        GOOGLE_APPLICATION_CREDENTIALS = credentials('gcp-service-account')
     }
 
     stages{ 
@@ -29,6 +30,7 @@ pipeline{
                 withCredentials([file(credentialsId: 'load-certificate', variable: 'GCP_LB_CERT')]) {
                     dir("${TERRAFORM_DIR}") {
                         sh "cp \${GCP_LB_CERT} ."
+                        sh "ls -al"
                     }
                 }
             }
