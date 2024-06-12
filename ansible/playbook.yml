@@ -71,29 +71,29 @@
     - maven
     - tomcat
 
-- name: deploy monitoring stack
-  hosts: monitoring_instances
-  become: yes
-  pre_tasks:
-    - name: get secret version for my-new-secret
-      command: gcloud secrets versions access latest --secret="my-new-secret"
-      register: secret_content
+# - name: deploy monitoring stack
+#   hosts: monitoring_instances
+#   become: yes
+#   pre_tasks:
+#     - name: get secret version for my-new-secret
+#       command: gcloud secrets versions access latest --secret="my-new-secret"
+#       register: secret_content
 
-    - name: parse secret json for my-new-secret
-      set_fact:
-        credentials: "{{ secret_content.stdout | from_json }}"
+#     - name: parse secret json for my-new-secret
+#       set_fact:
+#         credentials: "{{ secret_content.stdout | from_json }}"
 
-    - name: inventory facts for monitoring stack
-      set_fact:
-        grafana_prometheus_ip: "{{ credentials.grafana_prometheus_ip }}"
+#     - name: inventory facts for monitoring stack
+#       set_fact:
+#         grafana_prometheus_ip: "{{ credentials.grafana_prometheus_ip }}"
 
-    - name: grafana prometheus IP
-      debug:
-        msg: "grafana prometheus IP is {{ grafana_prometheus_ip }}"
+#     - name: grafana prometheus IP
+#       debug:
+#         msg: "grafana prometheus IP is {{ grafana_prometheus_ip }}"
 
-  roles:
-    - grafana
-    - prometheus
+#   roles:
+#     - grafana
+#     - prometheus
 - name: Install PostgreSQL and setup database
   hosts: dbservers
   become: 'yes'
