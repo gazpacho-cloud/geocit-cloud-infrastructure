@@ -11,7 +11,7 @@ pipeline {
             steps {
                 echo 'Ansible'
                 dir("${WORKING_DIR }") {
-                        sh 'ansible-playbook playbook.yml -i inventory.ini --vault-password-file ${ANSIBLE_VAULT_PASSWORD_FILE}'
+                        sh 'ansible-playbook playbook.yml -i inventory.ini --vault-password-file ${ANSIBLE_VAULT_PASSWORD_FILE} --user wushatneen --key-file /home/wushatneen/.ssh/id_rsa'
                 }
             }
         }
