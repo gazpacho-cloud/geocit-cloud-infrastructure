@@ -6,7 +6,7 @@
   pre_tasks:
     - name: auth with GCloud
       shell: |
-        gcloud auth activate-service-account --key-file $GOOGLE_APPLICATION_CREDENTIALS  
+        gcloud auth activate-service-account --key-file ${GOOGLE_APPLICATION_CREDENTIALS}
       when: not ansible_check_mode
 
     - name: get secret version for my-new-secret
