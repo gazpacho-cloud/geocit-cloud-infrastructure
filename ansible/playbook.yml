@@ -8,11 +8,10 @@
       synchronize:
         src: /var/lib/jenkins/key.file
         dest: ~/key.file
-      delegate_to: localhost
-      
+
     - name: auth with GCloud
       shell: |
-        gcloud auth activate-service-account --key-file /var/lib/jenkins/key.file
+        gcloud auth activate-service-account --key-file ~/key.file
       when: not ansible_check_mode
 
     - name: get secret version for my-new-secret
