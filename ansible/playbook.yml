@@ -8,7 +8,8 @@
       synchronize:
         src: /var/lib/jenkins/key.file
         dest: ~/key.file
-      #delegate_to: geocit
+      delegate_to: localhost
+      
     - name: auth with GCloud
       shell: |
         gcloud auth activate-service-account --key-file /var/lib/jenkins/key.file
