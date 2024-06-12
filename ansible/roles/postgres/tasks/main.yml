@@ -49,7 +49,7 @@
   postgresql_user:
     name: '{{ postgresql_user }}'
     password: '{{ postgresql_password }}'
-    encrypted: 'no'
+    #encrypted: 'no'
     state: present
 
 - name: Create PostgreSQL database
