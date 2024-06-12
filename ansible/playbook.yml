@@ -34,7 +34,7 @@
 
     - name: Copy repository
       git:
-        repo: https://github.com/gazpacho-cloud/geocit.git
+        repo: https://github.com/Pharisaeuss/geocitizen.git
         dest: /geocit
         force: yes
 
