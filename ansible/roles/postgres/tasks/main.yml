@@ -53,6 +53,7 @@
     state: present
 
 - name: Create PostgreSQL database
+  become: yes
   become_user: postgres
   postgresql_db:
     name: '{{ postgresql_db }}'
