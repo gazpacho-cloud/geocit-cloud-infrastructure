@@ -1,6 +1,10 @@
 ---
+- name: HTTPS Apt
+  apt:
+    name: apt-transport-https
+    state: present 
+    
 - name: Update apt cache
-  become: yes
   apt:
     update_cache: yes
   
