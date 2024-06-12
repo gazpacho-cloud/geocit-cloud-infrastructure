@@ -18,6 +18,7 @@
     update_cache: 'yes'
 
 - name: Install PostgreSQL
+  become: yes
   apt:
     name: 'postgresql-{{ postgresql_version }}'
     state: present
