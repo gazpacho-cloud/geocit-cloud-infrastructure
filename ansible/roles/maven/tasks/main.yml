@@ -4,11 +4,10 @@
 #     name: apt-transport-https
 #     state: present 
 
-- name: Update apt cache
-  apt:
-    upgrade: dist
-    force_apt_get: yes
-    update_cache: yes
+# - name: Update apt cache
+#   apt:
+#     force_apt_get: yes
+#     update_cache: yes
   
 - name: install java
   apt:
