@@ -34,6 +34,18 @@
     state: started
     enabled: 'yes'
 
+- name: Install pip
+  apt:
+    name: pip
+  state: present
+  become: true
+
+- name: Make sure psycopg2 is installed - needed for ansible postgresql stuff
+  ansible.builtin.pip:
+    name: psycopg2-binary
+  state: present
+  become: true
+
 - name: Set PostgreSQL user password
   become_user: postgres
   postgresql_user:
