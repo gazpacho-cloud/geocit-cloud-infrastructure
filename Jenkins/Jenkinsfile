@@ -8,7 +8,7 @@ pipeline {
         choice(name: 'ENV', choices: ['DEV', 'STAGE', 'PROD'], description: 'Deployment environment')
     }
     environment {
-        WORKING_DIR = "${WORKSPACE}/arifactory_build"
+        WORKING_DIR = "${WORKSPACE}/artifactory_build"
         NAME_ARTIFACT = sh(script: 'echo "citizen-${GIT_BRANCH}-${HASH_COMMIT}.war"', returnStdout: true)
         // NAME_ARTIFACT = "citizen-${GIT_BRANCH}-${HASH_COMMIT}.war"
         GOOGLE_CREDENTIALS = credentials('gcp-service-account')
@@ -25,7 +25,7 @@ pipeline {
         stage('Verify Workspace') {
                 steps {
                     sh 'ls -al'
-                    sh 'ls -al Jenkins'
+                    sh 'pwd'
     }
 }
 
@@ -40,7 +40,7 @@ pipeline {
                             variable: 'test')
                         ]) {
                             sh 'cp "\$test" application.properties'
-                            sh "bash .Jenkins/env.sh"
+                            sh "bash ${WORKSPACE}/Jenkins/env.sh"
                             sh "echo ${NAME_ARTIFACT}"
                         }
                     }
