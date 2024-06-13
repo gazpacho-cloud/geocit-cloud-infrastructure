@@ -27,13 +27,12 @@ pipeline {
             steps {
                 script {
                     dir("${WORKING_DIR }/src/main/resources/") {
-                        // withCredentials([
-                        // file(
-                        //     credentialsId: 'properties',
-                        //     variable: 'test')
-                        // ]) 
-                        {
-                           // sh 'cp "\$test" application.properties'
+                        withCredentials([
+                        file(
+                            credentialsId: 'gcp-service-account',
+                            variable: 'test')
+                        ]) {
+                            sh 'cp "\$test" application.properties'
                             sh "bash ${WORKSPACE}/Jenkins/env.sh"
                             sh "echo ${NAME_ARTIFACT}"
                         }
