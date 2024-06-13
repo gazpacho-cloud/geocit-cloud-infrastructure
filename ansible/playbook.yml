@@ -1,38 +1,9 @@
 ---
-- name: Install PostgreSQL and setup database
-  hosts: db_server
-  become: yes
-  become_method: sudo
-
-  vars:
-    postgresql_version: "14"
-    postgresql_user: "postgres"
-    postgresql_password: "postgres"
-    postgresql_db: "ss_demo_1"
-
-  roles:
-    - postgres 
-
-  handlers:
-    - name: Restart PostgreSQL
-      service:
-        name: postgresql
-        state: restarted
-  
 - name: deploy Geocitizen app
   hosts: localhost
   gather_facts: yes
   become: yes
   pre_tasks:
-    - name: Create ansible.cfg with required configuration
-      copy:
-        dest: ./ansible.cfg
-        content: |
-          [defaults]
-          
-          [ssh_connection]
-          pipelining=True
-
     - name: auth with GCloud
       shell: |
         gcloud auth activate-service-account --key-file /path/to/your/service-account-key.json  
@@ -98,6 +69,26 @@
     - maven
     - tomcat
 
+- name: Install PostgreSQL and setup database
+  hosts: db_server
+  become: yes
+  become_method: sudo
+
+  vars:
+    postgresql_version: "14"
+    postgresql_user: "postgres"
+    postgresql_password: "postgres"
+    postgresql_db: "ss_demo_1"
+
+  roles:
+    - postgres 
+
+  handlers:
+    - name: Restart PostgreSQL
+      service:
+        name: postgresql
+        state: restarted
+  
 - name: deploy monitoring stack
   hosts: monitoring_instances
   become: yes
