@@ -8,9 +8,7 @@ pipeline {
         choice(name: 'ENV', choices: ['DEV', 'STAGE', 'PROD'], description: 'Deployment environment')
     }
     environment {
-        WORKING_DIR = "${WORKSPACE}/artifactory_build"
         NAME_ARTIFACT = sh(script: 'echo "citizen-${GIT_BRANCH}-${HASH_COMMIT}.war"', returnStdout: true)
-        // NAME_ARTIFACT = "citizen-${GIT_BRANCH}-${HASH_COMMIT}.war"
         GOOGLE_CREDENTIALS = credentials('gcp-service-account')
     }
     stages {
@@ -18,34 +16,9 @@ pipeline {
         stage('git checkout') {
                 steps {
                     script {
-                        git branch: 'main', url: 'https://github.com/CapybaraDevOps/geocit.git'
+                        git branch: 'main', url: 'https://github.com/gazpacho-cloud/geocit.git'
                     }
                 }
-        }
-        stage('Verify Workspace') {
-                steps {
-                    sh 'ls -al'
-                    sh 'pwd'
-    }
-}
-
-
-        stage('add credentials') {
-            steps {
-                script {
-                    dir("${WORKING_DIR }/src/main/resources/") {
-                        withCredentials([
-                        file(
-                            credentialsId: 'gcp-service-account',
-                            variable: 'test')
-                        ]) {
-                            sh 'cp "\$test" application.properties'
-                            sh "bash ${WORKSPACE}/Jenkins/env.sh"
-                            sh "echo ${NAME_ARTIFACT}"
-                        }
-                    }
-                }
-            }
         }
         stage('Build Back-end') {
             steps {
@@ -61,7 +34,7 @@ pipeline {
             steps {
                 script {
                     def hash = sh(script: "git rev-parse --short HEAD", returnStdout: true).trim()
-                    def buildName = "${params.ENV}-${params.BUILDNAME}-$BUILD_NUMBER-${hash}"
+                    def buildName = "${params.ENV}-citizen-$BUILD_NUMBER-${hash}.war"
 
                     def repo = ""
                     if (params.ENV == 'DEV') {
@@ -70,9 +43,8 @@ pipeline {
                         repo = 'stage-maven-local'
                     } else if (params.ENV == 'PROD') {
                         repo = 'prod-maven-local'
-                    }
-
-                    jf "rt u /var/lib/jenkins/workspace/${WORKING_DIR}/target/citizen.war ${repo}/${NAME_ARTIFACT}.war"
+                    }                
+                    jf "rt u ${WORKSPACE}/target/citizen.war ${repo}/${buildName}"
                     jf "rt bp"
                 }
             }
