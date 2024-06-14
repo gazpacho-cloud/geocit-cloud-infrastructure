@@ -8,17 +8,42 @@ pipeline {
         choice(name: 'ENV', choices: ['DEV', 'STAGE', 'PROD'], description: 'Deployment environment')
     }
     environment {
+        TOKEN = credentials('telegramToken')
+        CHAT_ID = credentials('telegramChatId')
         NAME_ARTIFACT = sh(script: 'echo "citizen-${GIT_BRANCH}-${HASH_COMMIT}.war"', returnStdout: true)
         GOOGLE_CREDENTIALS = credentials('gcp-service-account')
+        CREDENTIALS_FILE = credentials('geocit_credentials')
     }
     stages {
-    
         stage('git checkout') {
                 steps {
                     script {
-                        git branch: 'main', url: 'https://github.com/gazpacho-cloud/geocit.git'
+                        git branch: 'main', credentialsId:'borys-github', url: 'https://github.com/gazpacho-cloud/geocit.git'
                     }
                 }
+        }
+        stage('Configure') {
+            steps {
+                script {
+                    withCredentials([file(credentialsId: 'geocit_credentials', variable: 'CREDENTIALS_FILE')]) {
+                        def json = readJSON file: "${CREDENTIALS_FILE}"
+
+                        def appProp = "src/main/resources/application.properties"
+                        def app_js = "src/main/webapp/static/js/app.*.js"
+
+                        sh "sed -i 's|http://localhost:8080|https://theranodocker.buzz|g' $appProp"
+                        sh "sed -i 's|http://localhost:8080|https://theranodocker.buzz|g' $app_js"
+                        sh "sed -i 's|localhost:5432|${json.db_ip}:5432|g' $appProp"
+
+                        sh "sed -i 's|^db.username=.*|db.username=${json.db_username}|' ${appProp}"
+                        sh "sed -i 's|^db.password=.*|db.password=${json.db_password}|' ${appProp}"
+
+                        sh "sed -i 's|^email.username=.*|email.username=${json.smtp_username}|' ${appProp}"
+                        sh "sed -i 's|^email.password=.*|email.password=${json.smtp_password}|' ${appProp}"
+                        sh "sed -i 's|^map.key=.*|map.key=${json.map_key}|' ${appProp}"
+                    }
+                }   
+            }
         }
         stage('Build Back-end') {
             steps {
@@ -53,6 +78,16 @@ pipeline {
     post {
         always {
             cleanWs()
+        }
+        success {
+            script{
+                sh "curl --location --request POST 'https://api.telegram.org/bot${TOKEN}/sendMessage' --form text='Build ${env.JOB_NAME} is successful:\n ${env.BUILD_URL}' --form chat_id='${CHAT_ID}'"
+            }
+        }
+        failure {
+            script{
+                sh "curl --location --request POST 'https://api.telegram.org/bot${TOKEN}/sendMessage' --form text='Build ${env.JOB_NAME} failed:\n ${env.BUILD_URL}' --form chat_id='${CHAT_ID}'"
+            }
         }
     }
 }
