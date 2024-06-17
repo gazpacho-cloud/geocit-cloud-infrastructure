@@ -117,3 +117,14 @@
 
   roles:
    - jfrog 
+- name: deploy nginx
+  hosts: nginx
+  become: yes
+  vars:
+    proxy_pass_http: ""
+    certs_key_pass: "" 
+    certs_pass: ""
+
+
+  roles:
+   - nginx
