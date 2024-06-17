@@ -117,6 +117,7 @@
 
   roles:
    - jfrog 
+   
 - name: deploy nginx
   hosts: nginx
   become: yes
