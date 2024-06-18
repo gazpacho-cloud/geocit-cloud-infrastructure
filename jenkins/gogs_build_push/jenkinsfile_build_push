@@ -33,6 +33,7 @@ pipeline {
                     echo ${BUILD_NUMBER}
 
                     docker build -f /var/lib/jenkins/workspace/GOGS-docker-build-push/gogs/Dockerfile -t ${params.BUILDNAME}:${BUILD_NUMBER} .
+                    ls -la
                     """
                 }
             }
@@ -41,7 +42,7 @@ pipeline {
          steps {
                 script {
                     def repo = ''
-                    repo = "${env.ARTIFACTORY_URL}/dev-gogs-go-local"
+                    repo = "${env.ARTIFACTORY_URL}/gogs-go-local-docker"
                     def imageTag = "${repo}/gogs:$BUILD_NUMBER"
                     sh "docker tag gogs:$BUILD_NUMBER ${imageTag}"                                  
                     withCredentials([usernamePassword(credentialsId: 'docker-creds', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
