@@ -35,7 +35,7 @@ pipeline {
                     echo ${params.BUILDNAME}
                     echo ${BUILD_NUMBER}
 
-                    docker build -f /var/lib/jenkins/workspace/GOGS-docker-build-push/${params.BUILDNAME}/Dockerfile -t ${params.BUILDNAME}:${BUILD_NUMBER} .
+                    docker build -f /var/lib/jenkins/workspace/GOGS-docker-build-push/gogs/Dockerfile -t ${params.BUILDNAME}:${BUILD_NUMBER} .
                     """
                 }
             }
