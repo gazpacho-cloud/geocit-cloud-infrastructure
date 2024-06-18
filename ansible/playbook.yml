@@ -122,9 +122,9 @@
   hosts: nginx
   become: yes
   vars:
-    proxy_pass_http: ""
-    certs_key_pass: "" 
-    certs_pass: ""
+    proxy_pass_http: 192.168.0.0
+    certs_key_pass: "/etc/ssl/private/nginxkey.key" 
+    certs_pass: "/etc/ssl/certs/nginxcert.crt"
 
 
   roles:
