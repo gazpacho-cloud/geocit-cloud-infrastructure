@@ -65,7 +65,7 @@
     password: "{{ postgresql_password }}"
     state: present
 
-  - name: Create PostgreSQL database
+- name: Create PostgreSQL database
   become_user: postgres
   postgresql_db:
     name: "{{ postgresql_db }}"
