@@ -10,6 +10,8 @@ pipeline {
     }
     environment {
         ARTIFACTORY_URL = 'http://34.118.16.16:8082/artifactory'
+        TOKEN = credentials('telegramToken')
+        CHAT_ID = credentials('telegramChatId')
     }
     stages {
         stage('Checkout') {
@@ -56,12 +58,22 @@ pipeline {
                 }
             }
         }
-    }
+    
     post {
         always {
             cleanWs()
             sh 'docker system prune -a -f'
             sh 'go clean -cache'
         }
-    }
+        success {
+            script{
+                sh "curl --location --request POST 'https://api.telegram.org/bot${TOKEN}/sendMessage' --form text='Build ${env.JOB_NAME} is successful: ${env.BUILD_URL}' --form chat_id='${CHAT_ID}'"
+            }
+        }
+        failure {
+            script{
+                sh "curl --location --request POST 'https://api.telegram.org/bot${TOKEN}/sendMessage' --form text='Build ${env.JOB_NAME} failed: ${env.BUILD_URL}' --form chat_id='${CHAT_ID}'"
+            }
+        }
+    }       
 }
