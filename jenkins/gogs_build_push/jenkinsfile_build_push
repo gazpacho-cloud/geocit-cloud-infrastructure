@@ -1,0 +1,67 @@
+pipeline {
+    agent any
+     tools {
+		jfrog 'jfrog-cli'
+        go '1.22.4'
+        dockerTool 'docker'
+	}
+    parameters {
+        string(name: 'BUILDNAME', defaultValue: 'gogs', description: 'Build Name')
+    }
+    environment {
+        ARTIFACTORY_URL = 'http://34.118.16.16:8082/artifactory'
+    }
+    stages {
+        stage('Checkout') {
+             steps {
+                script {
+                    git branch: 'GEO-28-GOGS-build-and-push-to-dockerhub', credentialsId: 'borys-github', url: 'git@github.com:gazpacho-cloud/geocit-cloud-infrastructure.git'
+                }
+            }
+        }
+        stage('Docker Build') {
+            steps {
+                script {
+                    sh '''
+                    docker --version
+                    git clone --depth 1 https://github.com/gogs/gogs.git gogs
+                    ls -la
+                    cd gogs
+                    ls -la
+                    go build -o gogs
+                    ls -la
+                    docker build -f /var/lib/jenkins/workspace/GOGS_Build/jenkins/Dockerfile -t gogs:${BUILD_NUMBER} .
+                    '''
+                }
+            }
+        }
+        stage('Docker Push') {
+         steps {
+                script {
+
+                    def repo = ''
+                    repo = "${env.ARTIFACTORY_URL}/dev-gogs-go-local"
+                    error "Invalid repository selection"
+                    }
+
+                    def imageTag = "${repo}/gogs:$BUILD_NUMBER"
+                    sh "docker tag gogs:$BUILD_NUMBER ${imageTag}"
+                    
+                    
+                    withCredentials([usernamePassword(credentialsId: 'docker-creds', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                        sh "docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD http://34.118.16.16"
+                        sh "docker push ${imageTag}"
+                        sh "docker logout ${env.ARTIFACTORY_URL}"
+                    }
+                }
+            }
+        }
+    }
+    post {
+        always {
+            cleanWs()
+            sh 'docker system prune -a -f'
+            sh 'go clean -cache'
+        }
+    }
+}

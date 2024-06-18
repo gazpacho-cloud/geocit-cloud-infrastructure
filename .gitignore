@@ -20,3 +20,5 @@ user_add_true.groovy
 
 terraform/certificate.pem
 terraform/key.pem
+terraform/private.key.pem
+ansible/file.txt
