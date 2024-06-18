@@ -39,6 +39,7 @@ pipeline {
         }
         stage('Docker Push') {
          steps {
+                script {
                     def repo = ''
                     repo = "${env.ARTIFACTORY_URL}/dev-gogs-go-local"
                     error "Invalid repository selection"
@@ -49,6 +50,7 @@ pipeline {
                         sh "docker push ${imageTag}"
                         sh "docker logout ${env.ARTIFACTORY_URL}"
                     }
+                }
                 }
             }
         }
