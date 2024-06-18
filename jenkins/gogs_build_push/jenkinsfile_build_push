@@ -9,7 +9,7 @@ pipeline {
         string(name: 'BUILDNAME', defaultValue: 'gogs', description: 'Build Name')
     }
     environment {
-        ARTIFACTORY_URL = 'https://34.118.16.16/artifactory'
+        ARTIFACTORY_URL = 'http://34.118.16.16:8082/artifactory'
         TOKEN = credentials('telegramToken')
         CHAT_ID = credentials('telegramChatId')
     }
@@ -46,7 +46,7 @@ pipeline {
                     def imageTag = "${env.ARTIFACTORY_URL}/dev-gogs-go-local/${params.BUILDNAME}:$BUILD_NUMBER-${hash}"
                     sh "docker tag ${params.BUILDNAME}:$BUILD_NUMBER ${params.BUILDNAME}:$BUILD_NUMBER-${hash}"                                 
                     withCredentials([usernamePassword(credentialsId: 'docker-creds', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
-                        sh "docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD http://34.118.16.16:8082"
+                        sh "docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD http://34.118.16.16"
                         sh "docker push ${imageTag}"
                         sh "docker logout ${env.ARTIFACTORY_URL}"
                     }
