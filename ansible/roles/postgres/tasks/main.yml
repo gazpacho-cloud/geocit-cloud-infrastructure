@@ -39,6 +39,24 @@
     state: started
     enabled: yes
 
+- name: Ensure line exists in pg_hba.conf
+  lineinfile:
+    path: /etc/postgresql/{{ postgresql_version }}/main/pg_hba.conf
+    state: present
+    line: 'host all all 0.0.0.0/0 scram-sha-256'
+
+- name: Ensure listen_addresses is set to '*'
+  lineinfile:
+    path: /etc/postgresql/{{ postgresql_version }}/main/postgresql.conf
+    state: present
+    regexp: '^#?listen_addresses\s*=\s*.*'
+    line: "listen_addresses = '*'"
+
+- name: Restart PostgreSQl
+  service:
+    name: postgresql
+    state: restarted
+
 - name: Set PostgreSQL user password
   become_user: postgres
   become_method: sudo
@@ -47,7 +65,7 @@
     password: "{{ postgresql_password }}"
     state: present
 
-- name: Create PostgreSQL database
+  - name: Create PostgreSQL database
   become_user: postgres
   postgresql_db:
     name: "{{ postgresql_db }}"
@@ -57,18 +75,3 @@
     lc_ctype: en_US.UTF-8
     template: template0
     state: present
-
-- name: Ensure line exists in pg_hba.conf
-  lineinfile:
-    path: /etc/postgresql/{{ postgresql_version }}/main/pg_hba.conf
-    state: present
-    line: 'host all all 0.0.0.0/0 scram-sha-256'
-  notify: Restart PostgreSQL
-
-- name: Ensure listen_addresses is set to '*'
-  lineinfile:
-    path: /etc/postgresql/{{ postgresql_version }}/main/postgresql.conf
-    state: present
-    regexp: '^#?listen_addresses\s*=\s*.*'
-    line: "listen_addresses = '*'"
-  notify: Restart PostgreSQL
