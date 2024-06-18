@@ -17,7 +17,7 @@ pipeline {
         stage('Checkout') {
              steps {
                 script {
-                    git branch: 'GEO-28-GOGS-build-and-push-to-dockerhub', credentialsId: 'borys-github', url: 'git@github.com:gazpacho-cloud/geocit-cloud-infrastructure.git'
+                    git branch: 'GEO-28-GOGS-build-and-push-to-dockerhub', url: 'https://github.com/gazpacho-cloud/geocit-cloud-infrastructure'
                 }
             }
         }
