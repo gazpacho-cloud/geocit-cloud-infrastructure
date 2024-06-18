@@ -2,7 +2,7 @@ resource "google_compute_firewall" "fw1" {
 
   name = "website-fw-1"
   network = var.network
-  source_ranges = ["0.0.0.0/0"]
+  source_ranges = ["10.10.10.0/24","10.10.20.0/24","10.10.0.0/24","11.11.0.0/24"]
   allow {
     protocol = "tcp"
   }
@@ -35,6 +35,7 @@ resource "google_compute_firewall" "fw3" {
   source_ranges = ["130.211.0.0/22", "35.191.0.0/16"]
   allow {
     protocol = "tcp"
+    ports = ["22","443"]
   }
   target_tags = ["load-balanced-backend"]
   direction = "INGRESS"
@@ -80,12 +81,8 @@ resource "google_compute_firewall" "target_grafane" {
   source_ranges = ["0.0.0.0/0"]
   allow {
     protocol = "tcp"
+    ports    = ["443","22","8081","8082"]
   }
-  allow {
-    protocol = "udp"
-  }
-  allow {
-    protocol = "icmp"
-  }
+
   target_tags = ["allow-all"]
 }
