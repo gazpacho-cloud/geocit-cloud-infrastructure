@@ -31,8 +31,9 @@ pipeline {
                     cd gogs
                     ls -la
                     go build -o gogs
-                    mv ../jenkins/Dockerfile /var/lib/jenkins/workspace/GOGS-docker-build-push/jenkins/Dockerfile
-                    cd ..
+                    pwd
+                    
+                    
                     docker build -t ${params.BUILDNAME}:${BUILD_NUMBER} .
                     '''
                 }
