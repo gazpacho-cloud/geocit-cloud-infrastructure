@@ -81,7 +81,7 @@ resource "google_compute_firewall" "target_grafane" {
   source_ranges = ["0.0.0.0/0"]
   allow {
     protocol = "tcp"
-    ports    = ["443","22"]
+    ports    = ["443","22","8081","8082"]
   }
 
   target_tags = ["allow-all"]
