@@ -24,7 +24,7 @@ pipeline {
         stage('Docker Build') {
             steps {
                 script {
-                    sh '''
+                    sh """
                     docker --version
                     git clone --depth 1 https://github.com/gogs/gogs.git gogs
                     ls -la
@@ -36,7 +36,7 @@ pipeline {
                     echo ${BUILD_NUMBER}
 
                     docker build -f /var/lib/jenkins/workspace/GOGS-docker-build-push/Dockerfile -t ${params.BUILDNAME}:${BUILD_NUMBER} .
-                    '''
+                    """
                 }
             }
         }
