@@ -25,11 +25,8 @@ pipeline {
             steps {
                 script {
                     sh """
-                    docker --version
-                    git clone --depth 1 https://github.com/gogs/gogs.git gogs
-                    ls -la
+                    git clone https://github.com/gogs/gogs.git gogs
                     cd gogs
-                    ls -la
                     go build -o gogs
                     pwd
                     echo ${params.BUILDNAME}
@@ -45,7 +42,6 @@ pipeline {
                 script {
                     def repo = ''
                     repo = "${env.ARTIFACTORY_URL}/dev-gogs-go-local"
-                    error "Invalid repository selection"
                     def imageTag = "${repo}/gogs:$BUILD_NUMBER"
                     sh "docker tag gogs:$BUILD_NUMBER ${imageTag}"                                  
                     withCredentials([usernamePassword(credentialsId: 'docker-creds', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
