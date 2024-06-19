@@ -36,3 +36,63 @@
     chdir: /geocit
   register: mvn_result
 
+  ---
+- name: install java
+  apt:
+    name: openjdk-11-jdk
+    state: present
+
+- name: download maven
+  get_url:
+    url: https://archive.apache.org/dist/maven/maven-3/3.8.4/binaries/apache-maven-3.8.4-bin.tar.gz
+    dest: /tmp/apache-maven-3.8.4-bin.tar.gz
+  register: maven_download
+
+- name: xtract maven
+  unarchive:
+    src: /tmp/apache-maven-3.8.4-bin.tar.gz
+    dest: /opt
+    remote_src: yes
+
+- name: create symlink for maven for ci/cd
+  file:
+    src: /opt/apache-maven-3.8.4
+    dest: /opt/maven
+    state: link
+
+- name: add maven to PATH
+  copy:
+    dest: /etc/profile.d/maven.sh
+    content: |
+      export M2_HOME=/opt/maven
+      export PATH=${M2_HOME}/bin:${PATH}
+    mode: '0755'
+
+- name: Check the directory exists
+  file:
+    path: /tmp/jfrog-distribution-artifact
+    state: directory
+    mode: "0755"
+
+- name: Construct artifact URL
+  set_fact:
+    latest_artifact_url: "http://34.118.16.16:8082/{{ latest_artifact_uri }}"
+
+- name: Download the latest artifact
+  uri:
+    url: "http://34.118.16.16:8082/artifactory/prod-maven-local/PROD-citizen-133-08b6798.war"
+    method: GET
+    user: "admin"
+    password: "Liza-12332"
+    force_basic_auth: yes
+    dest: "/tmp/jfrog-distribution-artifact/latest-artifact.war"
+
+- name: Copy WAR file to Tomcat webapps directory
+  shell: cp /tmp/jfrog-distribution-artifact/latest-artifact.war /var/lib/tomcat9/webapps/citizen.war
+
+- name: Remove the JFrog artifact directory
+  file:
+    path: /tmp/jfrog-distribution-artifact
+    state: absent
+    force: yes
+
